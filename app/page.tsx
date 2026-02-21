@@ -1,16 +1,24 @@
-import ExploreBtn from "@/components/ExploreBtn"
-import events from "@/lib/constants"
-import EventCard from "@/components/EventCard"
+import ExploreBtn from "@/components/ExploreBtn";
+import EventCard from "@/components/EventCard";
+import {IEvent} from "@/database";
+import {cacheLife} from "next/cache";
 
-const page = () => {
-  return (
-    <section>
-      <h1 className="text-center">The hub for every gaming event you cant miss</h1>
-      <p className="text-center mt-5">all the events you should grind</p>
-    
-    <ExploreBtn/>
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-    <div className="mt-20 space-y-7">
+const Page = async () => {
+    'use cache';
+    cacheLife('hours')
+    const response = await fetch(`${BASE_URL}/api/events`);
+    const { events } = await response.json();
+
+    return (
+        <section>
+            <h1 className="text-center">The Hub for Every game <br /> Event You Cant Miss</h1>
+            <p className="text-center mt-5">Tournaments, Cups and more</p>
+
+            <ExploreBtn />
+
+            <div className="mt-20 space-y-7">
                 <h3>Featured Events</h3>
 
                 <ul className="events">
@@ -21,8 +29,8 @@ const page = () => {
                     ))}
                 </ul>
             </div>
-    </section>
-  )
+        </section>
+    )
 }
 
-export default page
+export default Page;
